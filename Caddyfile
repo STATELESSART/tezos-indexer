@@ -1,0 +1,4 @@
+54.237.211.33.nip.io {
+
+	reverse_proxy * hasura:8080
+}

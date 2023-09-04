@@ -1,0 +1,129 @@
+spec_version: 1.2
+package: cootoo
+
+database:
+  kind: sqlite
+  path: cootoo.sqlite3
+
+
+contracts:
+  cootoo_market:
+    address: KT1HAaynoWZ8hXjHCwV6xvFoo3zmXjGUEbiD
+    typename: cootoo_market
+  # coop:
+  #   address: KT1D4mPTcb2vCrAGVU4vZ4QPdvFekx5XriFW
+  #   typename: coop
+
+
+datasources:
+  # tzkt_mainnet:
+  #   kind: tzkt
+  #   url: https://api.tzkt.io
+  tzkt_ghostnet:
+    kind: tzkt
+    url: https://api.ghostnet.tzkt.io
+
+
+templates:
+  coop_template:
+    kind: operation
+    datasource: tzkt_ghostnet
+    types:
+      - transaction
+      - origination
+    contracts:
+      - <contract>
+    handlers:
+      - callback: on_coop_origination
+        pattern:
+          - type: origination
+            originated_contract: <contract>
+      - callback: on_add_members
+        pattern:
+          - type: transaction
+            destination: <contract>
+            entrypoint: add_members
+      - callback: on_delete_member
+        pattern:
+          - type: transaction
+            destination: <contract>
+            entrypoint: delete_member
+      - callback: on_change_coop_share
+        pattern:
+          - type: transaction
+            destination: <contract>
+            entrypoint: change_coop_share
+      - callback: on_new_coop_manager
+        pattern:
+          - type: transaction
+            destination: <contract>
+            entrypoint: accept_manager
+      - callback: on_tez_received
+        pattern:
+          - type: transaction
+            destination: <contract>
+            entrypoint: default
+
+
+
+indexes:
+  cootoo_mainnet:
+    kind: operation
+    # datasource: tzkt_mainnet
+    datasource: tzkt_ghostnet
+    types:
+      - transaction
+      - origination
+    contracts:
+      - cootoo_market
+    handlers:
+
+      # marketplace v2
+      - callback: on_swap
+        pattern:
+          - type: transaction
+            destination: cootoo_market
+            entrypoint: swap
+      - callback: on_cancel_swap
+        pattern:
+          - type: transaction
+            destination: cootoo_market
+            entrypoint: cancel_swap
+      - callback: on_collect
+        pattern:
+          - type: transaction
+            destination: cootoo_market
+            entrypoint: collect
+      - callback: on_create_coop
+        pattern:
+          - type: origination
+            source: cootoo_market
+
+      # coop
+      # - callback: on_add_members
+      #   pattern:
+      #     - type: transaction
+      #       destination: coop
+      #       entrypoint: add_members
+      # - callback: on_delete_member
+      #   pattern:
+      #     - type: transaction
+      #       destination: coop
+      #       entrypoint: delete_member
+      # - callback: on_change_coop_share
+      #   pattern:
+      #     - type: transaction
+      #       destination: coop
+      #       entrypoint: change_coop_share
+      # - callback: on_new_coop_manager
+      #   pattern:
+      #     - type: transaction
+      #       destination: coop
+      #       entrypoint: accept_manager
+      # - callback: on_tez_received
+      #   pattern:
+      #     - type: transaction
+      #       destination: coop
+      #       entrypoint: default
+
+     

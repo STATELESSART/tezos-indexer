@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "cootoo"
+version = "0.0.1"
+description = "cootoo indexer"
+license = "MIT"
+authors = [
+    "cootoo"
+]
+readme = "README.md"
+packages = [
+    { include = "cootoo", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+dipdup = "^6"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+ruff = "*"
+isort = "*"
+mypy = "*"
+pytest = "*"
+pytest-asyncio = "*"
+
+[tool.isort]
+line_length = 120
+force_single_line = true
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+skip-string-normalization = true
+
+[tool.ruff]
+line-length = 120
+target-version = 'py310'
+
+[tool.mypy]
+python_version = "3.10"
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = 'auto'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
