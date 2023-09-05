@@ -47,7 +47,7 @@ services:
     #   - HASURA_GRAPHQL_STRINGIFY_NUMERIC_TYPES=false
     image: hasura/graphql-engine:v2.17.0
     ports:
-      - 127.0.0.1:8080:8080
+      - 8080:8080
     depends_on:
       - db
     restart: always
