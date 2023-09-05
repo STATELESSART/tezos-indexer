@@ -45,9 +45,9 @@ services:
     #   - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_SECRET:-changeme}
     #   - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=user
     #   - HASURA_GRAPHQL_STRINGIFY_NUMERIC_TYPES=false
-    image: hasura/graphql-engine:v2.17.0
+    image: hasura/graphql-engine:latest
     ports:
-      - 8080:8080
+      - 127.0.0.1:8080:8080
     depends_on:
       - db
     restart: always
