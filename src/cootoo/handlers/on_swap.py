@@ -4,13 +4,14 @@ from dipdup.models import Transaction
 from cootoo.metadata_utils import fix_other_metadata, fix_token_metadata
 from cootoo.types.cootoo_market.parameter.swap import SwapParameter
 from cootoo.types.cootoo_market.storage import CootooMarketStorage
-
+from cootoo.metadata_utils import get_holder_profile
 
 async def on_swap(
     ctx: HandlerContext,
     swap: Transaction[SwapParameter, CootooMarketStorage],
 ) -> None:
-    holder, _ = await models.Holder.get_or_create(address=swap.data.sender_address)
+    # holder, _ = await models.Holder.get_or_create(address=swap.data.sender_address)
+    holder = await get_holder_profile(swap.data.sender_address)
     # token, _ = await models.Token.get_or_create(id=int(swap.parameter.objkt_id), fa2_address=swap.parameter.fa2_address)
     
     token_exists = await models.Token.exists(token_id=swap.parameter.objkt_id, fa2_address=swap.parameter.fa2_address)

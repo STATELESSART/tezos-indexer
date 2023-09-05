@@ -10,9 +10,9 @@ async def on_create_coop(
     create_coop: Transaction[CreateCoopParameter, CootooMarketStorage],
 ) -> None:
     
-    ctx.logger.info(create_coop)
+    # ctx.logger.info(create_coop)
     address = next(iter(create_coop.storage.coops))
-    ctx.logger.info(address)
+    # ctx.logger.info(address)
     originated_contract = cast(str, address)
     name = f'coop_template_{originated_contract}'
     await ctx.add_contract(

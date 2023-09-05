@@ -1,0 +1,15 @@
+query getCoop($contract: String = "") {
+  coop(where: {address: {_eq: $contract}}) {
+    coopShare
+    manager {
+      address
+      name
+    }
+    members {
+      member {
+        address
+        name
+      }
+    }
+  }
+}

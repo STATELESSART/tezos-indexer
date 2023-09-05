@@ -1,0 +1,16 @@
+query getAllCoops {
+  coop {
+    address
+    coopShare
+    manager {
+      address
+      name
+    }
+    members {
+      member {
+        address
+        name
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ from dipdup.context import HandlerContext
 from dipdup.models import Transaction
 from cootoo.types.cootoo_market.parameter.collect import CollectParameter
 from cootoo.types.cootoo_market.storage import CootooMarketStorage
-
+from cootoo.metadata_utils import get_holder_profile
 
 async def on_collect(
     ctx: HandlerContext,
@@ -11,8 +11,9 @@ async def on_collect(
 ) -> None:
     swap = await models.Swap.filter(id=int(collect.parameter.__root__)).get()
     seller = await swap.creator
-    buyer, _ = await models.Holder.get_or_create(address=collect.data.sender_address)
-    ctx.logger.info(swap.token)
+    # buyer, _ = await models.Holder.get_or_create(address=collect.data.sender_address)
+    buyer = await get_holder_profile(collect.data.sender_address)
+    # ctx.logger.info(swap.token)
     token = await swap.token.get()  # type: ignore
  
     trade = models.Trade(

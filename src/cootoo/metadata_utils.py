@@ -188,7 +188,8 @@ async def fetch_token_details(token, failed_attempt=0):
 
     creator_address = data[0]['firstMinter']['address'] 
 
-    creator, _ = await models.Holder.get_or_create(address = creator_address)
+    # creator, _ = await models.Holder.get_or_create(address = creator_address)
+    creator = await get_holder_profile(creator_address)
     token.creator = creator
 
     return token
@@ -318,3 +319,35 @@ def get_first_minter(token):
 #     folder = f'{SUBJKT_PATH}/{lvl}'
 #     Path(folder).mkdir(parents=True, exist_ok=True)
 #     return f'{folder}/{addr}.json'
+
+
+async def get_holder_profile(address):
+
+    # create user
+
+    session = aiohttp.ClientSession()
+    profile = await http_request(
+        session,
+        'get',
+        url=f'https://api.tzprofiles.com/{address}',
+    )
+    await session.close()
+
+    _logger.info(profile)
+
+    username = ''
+    if len(profile) > 0:
+        for verification in profile:
+            obj = json.loads(verification[1])
+            context = obj['@context'][1]
+            credentialSubject = obj['credentialSubject']
+            if 'website' in context:
+                username = credentialSubject['alias']
+
+    holder, _ = await models.Holder.get_or_create(
+        address = address
+    )
+    holder.name = username
+    await holder.save()
+
+    return holder
