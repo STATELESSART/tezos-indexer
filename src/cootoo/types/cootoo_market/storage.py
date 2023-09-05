@@ -31,6 +31,7 @@ class CootooMarketStorage(BaseModel):
 
     allowed_fa2s: Dict[str, Dict[str, Any]]
     collects_paused: bool
+    coops: Dict[str, Dict[str, Any]]
     counter: str
     fee: str
     fee_recipient: str

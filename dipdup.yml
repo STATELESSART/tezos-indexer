@@ -8,7 +8,7 @@ database:
 
 contracts:
   cootoo_market:
-    address: KT1HAaynoWZ8hXjHCwV6xvFoo3zmXjGUEbiD
+    address: KT19xNfE5JndH3Aq2fR5diewC73cDjQMR3kH
     typename: cootoo_market
   # coop:
   #   address: KT1D4mPTcb2vCrAGVU4vZ4QPdvFekx5XriFW
@@ -96,8 +96,11 @@ indexes:
             entrypoint: collect
       - callback: on_create_coop
         pattern:
-          - type: origination
-            source: cootoo_market
+          - type: transaction
+            destination: cootoo_market
+            entrypoint: create_coop
+          # - type: origination
+          #   source: cootoo_market
 
       # coop
       # - callback: on_add_members
