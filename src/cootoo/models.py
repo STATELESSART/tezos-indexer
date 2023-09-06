@@ -25,6 +25,37 @@ class Holder(Model):
     # metadata = fields.JSONField(default={})
 
 
+####################
+# COOP Models #
+####################
+
+class Coop(Model):
+    address = fields.CharField(36, pk=True)
+    coop_share = fields.SmallIntField()
+    manager: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'manager', null=False, index=True)
+
+    ophash = fields.CharField(51)
+    level = fields.BigIntField()
+    timestamp = fields.DatetimeField()
+
+
+class CoopMember(Model):
+    id = fields.BigIntField(pk=True)
+    member: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'member', null=False, index=True)
+    coop: ForeignKeyFieldInstance[Coop] = fields.ForeignKeyField('models.Coop', 'members', null=False, index=True)
+    tez_received = fields.BigIntField()
+    status = fields.IntEnumField(MemberStatus)
+
+    ophash = fields.CharField(51)
+    level = fields.BigIntField()
+    timestamp = fields.DatetimeField()
+
+
+####################
+# MARKET Models #
+####################
+
+
 class Token(Model):
     id = fields.BigIntField(pk=True)
     token_id = fields.BigIntField()
@@ -71,6 +102,7 @@ class Swap(Model):
     id = fields.BigIntField(pk=True)
     creator: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'swaps', index=True)
     token: ForeignKeyFieldInstance[Token] = fields.ForeignKeyField('models.Token', 'swaps', index=True)
+    coop: ForeignKeyFieldInstance[Coop] = fields.ForeignKeyField('models.Coop', 'swaps', index=True)
     price = fields.BigIntField()
     amount = fields.SmallIntField()
     amount_left = fields.SmallIntField()
@@ -97,27 +129,4 @@ class Trade(Model):
     timestamp = fields.DatetimeField()
 
 
-####################
-# COOP Models #
-####################
 
-class Coop(Model):
-    address = fields.CharField(36, pk=True)
-    coop_share = fields.SmallIntField()
-    manager: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'manager', null=False, index=True)
-
-    ophash = fields.CharField(51)
-    level = fields.BigIntField()
-    timestamp = fields.DatetimeField()
-
-
-class CoopMember(Model):
-    id = fields.BigIntField(pk=True)
-    member: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'member', null=False, index=True)
-    coop: ForeignKeyFieldInstance[Coop] = fields.ForeignKeyField('models.Coop', 'members', null=False, index=True)
-    tez_received = fields.BigIntField()
-    status = fields.IntEnumField(MemberStatus)
-
-    ophash = fields.CharField(51)
-    level = fields.BigIntField()
-    timestamp = fields.DatetimeField()

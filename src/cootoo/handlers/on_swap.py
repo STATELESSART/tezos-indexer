@@ -51,10 +51,13 @@ async def on_swap(
 
     is_valid = swap.parameter.creator == token.creator_id and int(swap.parameter.royalties) == int(token.royalties)  # type: ignore
 
-    swap_model = models.Swap(
+    coop = await models.Coop.get(address=swap.parameter.coop_address)
+
+    swap = models.Swap(
         id=swap_id,  # type: ignore
         creator=holder,
         token=token,
+        coop=coop,
         price=swap.parameter.xtz_per_objkt,
         amount=swap.parameter.objkt_amount,
         amount_left=swap.parameter.objkt_amount,
@@ -66,7 +69,7 @@ async def on_swap(
         contract_version=1,
         is_valid=is_valid,
     )
-    await swap_model.save()
+    await swap.save()
 
     await fix_other_metadata()
     if not token.artifact_uri and not token.title:

@@ -28,16 +28,16 @@ templates:
   coop_template:
     kind: operation
     datasource: tzkt_ghostnet
-    types:
-      - transaction
-      - origination
+    # types:
+    #   - transaction
+    #   # - origination
     contracts:
       - <contract>
     handlers:
-      - callback: on_coop_origination
-        pattern:
-          - type: origination
-            originated_contract: <contract>
+      # - callback: on_coop_origination
+      #   pattern:
+      #     - type: origination
+      #       originated_contract: <contract>
       - callback: on_add_members
         pattern:
           - type: transaction
@@ -71,9 +71,9 @@ indexes:
     kind: operation
     # datasource: tzkt_mainnet
     datasource: tzkt_ghostnet
-    types:
-      - transaction
-      - origination
+    # types:
+    #   - transaction
+    #   # - origination
     contracts:
       - cootoo_market
     handlers:

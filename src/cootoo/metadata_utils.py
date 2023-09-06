@@ -24,9 +24,7 @@ except:
 
 async def fix_token_metadata(token):
     metadata_res = await get_metadata(token)
-    token_details = await fetch_token_details(token)
-    _logger.info(metadata_res)
-    _logger.info(token_details)
+    token = await fetch_token_details(token)
     if len(metadata_res) > 0:
         metadata = metadata_res[0]
         token.title = get_name(metadata)
@@ -36,23 +34,11 @@ async def fix_token_metadata(token):
         token.thumbnail_uri = get_thumbnail_uri(metadata)
         token.mime = get_mime(metadata)
         token.extra = metadata.get('extra', {})
-        # token.creator = get_creator(metadata)
-        # token.creator = get_first_minter(token_details)
-        _logger.info(token.creator)
         await add_tags(token, metadata)
         await token.save()
         return metadata != {}
     else:
         return {}
-    
-# async def fix_token_details(token):
-#     metadata_res = await fetch_token_details(token)
-#     _logger.info(metadata_res)
-#     if len(metadata_res) > 0:
-#         metadata = metadata_res[0]
-#         token.creator = get_first_minter(metadata)
-#         await token.save()
-#         return metadata != {}
 
 
 async def fix_other_metadata():
@@ -128,24 +114,24 @@ async def get_metadata(token):
     return data
 
 
-def normalize_metadata(token, metadata):
-    n = {
-        '__version': 1,
-        'token_id': token.id,
-        'symbol': metadata.get('symbol', 'OBJKT'),
-        'name': get_name(metadata),
-        'description': get_description(metadata),
-        'artifact_uri': get_artifact_uri(metadata),
-        'display_uri': get_display_uri(metadata),
-        'thumbnail_uri': get_thumbnail_uri(metadata),
-        'formats': get_formats(metadata),
-        'creators': get_creators(metadata),
-        # not cleaned / not lowercased, store as-is
-        'tags': metadata.get('tags', []),
-        'extra': {},
-    }
+# def normalize_metadata(token, metadata):
+#     n = {
+#         '__version': 1,
+#         'token_id': token.id,
+#         'symbol': metadata.get('symbol', 'OBJKT'),
+#         'name': get_name(metadata),
+#         'description': get_description(metadata),
+#         'artifact_uri': get_artifact_uri(metadata),
+#         'display_uri': get_display_uri(metadata),
+#         'thumbnail_uri': get_thumbnail_uri(metadata),
+#         'formats': get_formats(metadata),
+#         'creators': get_creators(metadata),
+#         # not cleaned / not lowercased, store as-is
+#         'tags': metadata.get('tags', []),
+#         'extra': {},
+#     }
 
-    return n
+#     return n
 
 
 # def write_subjkt_metadata_file(holder, metadata):
@@ -164,7 +150,6 @@ async def fetch_token_tzkt(token, failed_attempt=0):
         'get',
         url=f'https://api.ghostnet.tzkt.io/v1/tokens/?contract={token.fa2_address}&tokenId={token.token_id}',
     )
-    _logger.info(f'https://api.ghostnet.tzkt.io/v1/tokens/?contract={token.fa2_address}&tokenId={token.token_id}')
     await session.close()
 
     return data
@@ -184,11 +169,7 @@ async def fetch_token_details(token, failed_attempt=0):
 
     token.supply = data[0]['totalSupply']
 
-    _logger.info(data[0]['firstMinter']['address'])
-
-    creator_address = data[0]['firstMinter']['address'] 
-
-    # creator, _ = await models.Holder.get_or_create(address = creator_address)
+    creator_address = data[0]['firstMinter']['address']
     creator = await get_holder_profile(creator_address)
     token.creator = creator
 
@@ -196,14 +177,6 @@ async def fetch_token_details(token, failed_attempt=0):
 
 
 async def fetch_metadata_bcd(token, failed_attempt=0):
-    # session = aiohttp.ClientSession()
-    # data = await http_request(
-    #     session,
-    #     'get',
-    #     url=f'https://api.ghostnet.tzkt.io/v1/tokens/?contract={token.fa2_address}&tokenId={token.token_id}',
-    # )
-    # _logger.info(f'https://api.ghostnet.tzkt.io/v1/tokens/?contract={token.fa2_address}&tokenId={token.token_id}')
-    # await session.close()
 
     data = await fetch_token_tzkt(token)
 
@@ -294,14 +267,12 @@ def get_formats(metadata):
     return metadata.get('formats', [])
 
 
-def get_creators(metadata):
-    _logger.info(metadata)
-    _logger.info(metadata.get('creators'))
-    return [clean_null_bytes(x) for x in metadata.get('creators', [])]
+# def get_creators(metadata):
+#     return [clean_null_bytes(x) for x in metadata.get('creators', [])]
 
 
-def get_creator(metadata):
-    return [clean_null_bytes(x) for x in metadata.get('creator', [])]
+# def get_creator(metadata):
+#     return [clean_null_bytes(x) for x in metadata.get('creator', [])]
 
 def get_first_minter(token):
     return [clean_null_bytes(x) for x in token.get('creator', [])]
@@ -332,8 +303,6 @@ async def get_holder_profile(address):
         url=f'https://api.tzprofiles.com/{address}',
     )
     await session.close()
-
-    _logger.info(profile)
 
     username = ''
     if len(profile) > 0:

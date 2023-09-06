@@ -10,6 +10,7 @@ query getCoop($contract: String = "") {
         address
         name
       }
+      tezReceived
     }
   }
 }

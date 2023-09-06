@@ -27,7 +27,6 @@ async def on_coop_origination(
     )
     await coop.save()
 
-    ctx.logger.info(members)
     for member_address in members:
         # member, _ = await models.Holder.get_or_create(address=member_address)
         member = await get_holder_profile(member_address)

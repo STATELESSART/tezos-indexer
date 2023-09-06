@@ -12,12 +12,9 @@ async def on_add_members(
 ) -> None:
     
     coop = await models.Coop.get(address = add_member.data.target_address)
+    members_list = add_member.parameter.__root__
 
-    param = add_member.parameter.__root__
-    # ctx.logger.info(param)
-    # ctx.logger.info(type(param))
-
-    for address in param:
+    for address in members_list:
 
         # member, _ = await models.Holder.get_or_create(address = address)
         member = await get_holder_profile(address)

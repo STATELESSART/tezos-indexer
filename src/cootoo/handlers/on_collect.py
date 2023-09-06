@@ -13,7 +13,6 @@ async def on_collect(
     seller = await swap.creator
     # buyer, _ = await models.Holder.get_or_create(address=collect.data.sender_address)
     buyer = await get_holder_profile(collect.data.sender_address)
-    # ctx.logger.info(swap.token)
     token = await swap.token.get()  # type: ignore
  
     trade = models.Trade(
