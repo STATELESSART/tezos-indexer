@@ -22,7 +22,7 @@ async def on_swap(
         token = models.Token(
             token_id=swap.parameter.objkt_id,
             fa2_address=swap.parameter.fa2_address,
-            royalties=swap.parameter.royalties,
+            # royalties=swap.parameter.royalties,
             title='',
             description='',
             artifact_uri='',
@@ -49,7 +49,8 @@ async def on_swap(
 
     swap_id = int(swap.storage.counter) - 1
 
-    is_valid = swap.parameter.creator == token.creator_id and int(swap.parameter.royalties) == int(token.royalties)  # type: ignore
+    # is_valid = swap.parameter.creator == token.creator_id and int(swap.parameter.royalties) == int(token.royalties)  # type: ignore
+    is_valid = swap.parameter.creator == token.creator_id  # type: ignore
 
     coop = await models.Coop.get(address=swap.parameter.coop_address)
 

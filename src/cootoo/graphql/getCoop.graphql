@@ -1,5 +1,5 @@
-query getCoop($contract: String = "") {
-  coop(where: {address: {_eq: $contract}}) {
+query getcoop($address: String = "") {
+  coop(where: {address: {_eq: $address}}) {
     coopShare
     manager {
       address
@@ -11,6 +11,32 @@ query getCoop($contract: String = "") {
         name
       }
       tezReceived
+    }
+    swaps {
+      id
+      amountLeft
+      price
+      token {
+        artifactUri
+        creator {
+          address
+          name
+        }
+        description
+        fa2Address
+        title
+        tokenId
+        tokenTags {
+          tag {
+            tag
+          }
+        }
+      }
+      creator {
+        address
+        name
+      }
+      royalties
     }
   }
 }

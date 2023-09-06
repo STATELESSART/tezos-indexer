@@ -41,7 +41,7 @@ class Coop(Model):
 
 class CoopMember(Model):
     id = fields.BigIntField(pk=True)
-    member: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'member', null=False, index=True)
+    member: ForeignKeyFieldInstance[Holder] = fields.ForeignKeyField('models.Holder', 'coops', null=False, index=True)
     coop: ForeignKeyFieldInstance[Coop] = fields.ForeignKeyField('models.Coop', 'members', null=False, index=True)
     tez_received = fields.BigIntField()
     status = fields.IntEnumField(MemberStatus)
@@ -69,7 +69,7 @@ class Token(Model):
     metadata = fields.TextField(default='')
     extra = fields.JSONField(default={})
     mime = fields.TextField(default='')
-    royalties = fields.SmallIntField(default=0)
+    # royalties = fields.SmallIntField(default=0)
     supply = fields.SmallIntField(default=0)
 
     level = fields.BigIntField(default=0)
