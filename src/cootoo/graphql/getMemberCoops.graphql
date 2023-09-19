@@ -1,0 +1,17 @@
+query getMemberCoops($address: String = "") {
+  coopMember(where: {member: {address: {_eq: $address}}}) {
+    coop {
+      address
+      coopShare
+      manager {
+        address
+        name
+      }
+    }
+    status
+    tezReceived
+    member {
+      name
+    }
+  }
+}

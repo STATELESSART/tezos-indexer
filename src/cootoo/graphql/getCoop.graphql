@@ -11,6 +11,7 @@ query getcoop($address: String = "") {
         name
       }
       tezReceived
+      status
     }
     swaps {
       id
@@ -37,6 +38,7 @@ query getcoop($address: String = "") {
         name
       }
       royalties
+      status
     }
   }
 }
