@@ -12,10 +12,5 @@ query getAllCoops {
         name
       }
     }
-    swaps_aggregate {
-      aggregate {
-        count
-      }
-    }
   }
 }
